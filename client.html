@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Client Side</title>
+</head>
+<body>
+
+	<textarea type="text" id="inputText" placeholder="text" style="border: none; border-bottom: 1px solid black; outline: none; margin-left: 20px; resize: vertical; height: 48px;"></textarea>
+
+	<button id="submitBtn" style="border: none; outline: none; padding: 5px 10px; border-radius: 5px; margin-left: 10px; background-color: gold;">Send</button>
+
+	<ul id="list" style="list-style-type: none; margin-bottom: 20px; width: 110px; padding-bottom: 20px;">
+		<h1 id="item" style="border-radius: 20px; padding: 1px 8px 1px 8px; color: blue; font-size: 15px;"></h1>
+	</ul>
+
+<script type="text/javascript">
+// let date = new Date("2020-06-17");
+// alert(date);
+
+	submitBtn.onclick = () => {
+
+		const newBook = {
+			name: inputText.value,
+
+		}
+
+		fetch('http://192.168.1.3:8087/book', { method: 'POST', body: JSON.stringify(newBook)})
+		.then(response => response.json())
+		.then(result => {
+
+			if (result.error) {
+				throw new Error('Input Data | Server Error')
+			}
+
+			console.log(result.message)
+
+			const liElement = document.createElement('H2')
+			liElement.textContent = result.data.name
+
+			item.appendChild(liElement)
+		})
+	}
+
+	fetch('http://192.168.1.3:8087/book')
+	.then(response => response.json())
+	.then(data => {
+
+		for (let book of data) {
+			const liElement = document.createElement('H2')
+			liElement.textContent = book.name
+			item.appendChild(liElement)
+		}
+	})
+
+</script>
+</body>
+</html>
